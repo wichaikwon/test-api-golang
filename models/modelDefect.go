@@ -8,5 +8,5 @@ type ModelDefect struct {
 	DefectID  int       `json:"defect_id" gorm:"index;references:Defects(id);onDelete:CASCADE"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	IsDeleted bool      `json:"is_deleted" gorm:"default:false"` // เปลี่ยนเป็น boolean
+	IsDeleted bool      `json:"is_deleted" gorm:"default:false"`
 }

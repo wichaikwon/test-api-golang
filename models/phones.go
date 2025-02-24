@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type Phone struct {
+type Phones struct {
 	ID         int       `json:"id" gorm:"primaryKey;autoIncrement"`
 	BrandID    int       `json:"brand_id" gorm:"index;references:Brands(id);onDelete:CASCADE"`
 	ModelID    int       `json:"model_id" gorm:"index;references:Models(id);onDelete:CASCADE"`
