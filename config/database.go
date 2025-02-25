@@ -3,9 +3,7 @@ package config
 import (
 	"fmt"
 	"log"
-	"os"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq" // for PostgreSQL driver
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -15,21 +13,8 @@ import (
 
 var DB *gorm.DB
 
-func loadEnvVariables() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("❌ Error loading .env file")
-	}
-}
-
 func ConnectDB() {
-	loadEnvVariables()
-
-	// Get the DATABASE_URL from the environment
-	databaseURL := os.Getenv("DATABASE_URL")
-	if databaseURL == "" {
-		log.Fatal("❌ DATABASE_URL is not set in .env file")
-	}
+	databaseURL := "postgresql://postgres:gRMKQBuNJKCXounapRisyBXTDLUQTdlW@postgres.railway.internal:5432/railway"
 
 	// Open the database connection using GORM
 	db, err := gorm.Open(postgres.Open(databaseURL), &gorm.Config{})
