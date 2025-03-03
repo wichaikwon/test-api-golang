@@ -1,9 +1,12 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
+	"strconv"
 	"test-api-golang/config"
 	"test-api-golang/models"
+	"test-api-golang/services"
 
 	"github.com/gin-gonic/gin"
 )
@@ -45,6 +48,33 @@ func UpdatePriceAdjustment(c *gin.Context) {
 	}
 	config.DB.Save(&adjustment)
 	c.JSON(http.StatusOK, adjustment)
+}
+
+func UpdateDeductions(c *gin.Context) {
+	phoneID := c.Param("phone_id")
+
+	var deductions map[string]float64
+	if err := c.ShouldBindJSON(&deductions); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid input"})
+		return
+	}
+
+	intDeductions := make(map[int]float64)
+	for k, v := range deductions {
+		intKey, err := strconv.Atoi(k)
+		if err != nil {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid key in deductions"})
+			return
+		}
+		intDeductions[intKey] = v
+	}
+
+	if err := services.UpdateDeductions(phoneID, intDeductions); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to update deductions: %v", err)})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Deductions updated successfully"})
 }
 
 func DeletePriceAdjustment(c *gin.Context) {

@@ -21,9 +21,9 @@ import (
 func SetupRouter() *gin.Engine {
 	r := gin.Default()
 	r.Use(cors.New(cors.Config{
-		AllowOrigins:     []string{"*"},
+		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowMethods:     []string{"PUT", "DELETE", "OPTIONS"},
-		AllowHeaders:     []string{"Content-Type", "application/json"},
+		AllowHeaders:     []string{"Content-Type"},
 		ExposeHeaders:    []string{"Content-Length"},
 		AllowCredentials: true,
 	}))
@@ -32,9 +32,7 @@ func SetupRouter() *gin.Engine {
 	dataRoutes := r.Group("/api")
 	{
 		dataRoutes.GET("", controllers.GetPhonesByCriteria)
-		dataRoutes.OPTIONS("", func(c *gin.Context) {
-			c.Status(200)
-		})
+
 	}
 
 	brandRoutes := r.Group("/")
@@ -100,18 +98,17 @@ func SetupRouter() *gin.Engine {
 	{
 		phoneRoutes.GET("/phones", controllers.GetPhones)
 		phoneRoutes.GET("/phones/:id", controllers.GetPhoneById)
+		phoneRoutes.GET("/phoneswithdefects/:id", controllers.GetPhoneDetailWithDefects)
 		phoneRoutes.POST("/phones", controllers.CreatePhone)
 		phoneRoutes.PUT("/phones/:id", controllers.UpdatePhone)
 		phoneRoutes.DELETE("/phones/:id", controllers.DeletePhone)
-		phoneRoutes.GET("/phone/:brand", controllers.GetPhonesByBrand)
 	}
 	priceAdjusmentRoutes := r.Group("/")
 	{
 		priceAdjusmentRoutes.GET("/priceadjustment", controllers.GetPriceAdjustment)
-		priceAdjusmentRoutes.GET("/priceadjustment/:id", controllers.GetPriceAdjustmentById)
 		priceAdjusmentRoutes.POST("/priceadjustment", controllers.CreatePriceAdjustment)
-		priceAdjusmentRoutes.PUT("/priceadjustment/:id", controllers.UpdatePriceAdjustment)
-		priceAdjusmentRoutes.DELETE("/priceadjustment/:id", controllers.DeletePriceAdjustment)
+		priceAdjusmentRoutes.PUT("/priceadjustment/:phone_id/deductions", controllers.UpdateDeductions)
+
 	}
 
 	return r

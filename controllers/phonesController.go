@@ -20,37 +20,28 @@ func GetPhonesByCriteria(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK, gin.H{"phones": phones})
 }
-func GetPhonesByBrand(c *gin.Context) {
-	brand := c.Param("brand")
-	model := c.DefaultQuery("model", "")
-	storage := c.DefaultQuery("storage", "")
-	if brand == "" {
-		c.JSON(http.StatusBadRequest, gin.H{"error": "Brand parameter is required"})
-		return
-	}
-	var phones []models.PhonesView
-	query := config.DB.Where("brand_name = ?", brand)
-
-	if model != "" {
-		query = query.Where("model_name = ?", model)
-	}
-	if storage != "" {
-		query = query.Where("capacity_value = ?", storage)
-	}
-
-	if err := query.Find(&phones).Error; err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to fetch data"})
-		return
-	}
-	c.JSON(http.StatusOK, phones)
-}
 
 func GetPhones(c *gin.Context) {
 	var phones []models.Phones
 	config.DB.Find(&phones)
 	c.JSON(http.StatusOK, phones)
 }
+func GetPhoneDetailWithDefects(c *gin.Context) {
+	phoneID := c.Param("id")
+	var phones []models.PhonesView
+	query := `
+	SELECT * 
+	FROM view_phones_with_defects
+	WHERE phone_id = ? ORDER BY defect_id,choice_id ASC `
 
+	if err := config.DB.Raw(query, phoneID).Scan(&phones).Error; err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": "Unable to retrieve phone details",
+		})
+		return
+	}
+	c.JSON(http.StatusOK, phones)
+}
 func GetPhoneById(c *gin.Context) {
 	var phone models.Phones
 	if err := config.DB.First(&phone, c.Param("id")).Error; err != nil {
@@ -83,7 +74,6 @@ func UpdatePhone(c *gin.Context) {
 	config.DB.Save(&phone)
 	c.JSON(http.StatusOK, phone)
 }
-
 func DeletePhone(c *gin.Context) {
 	var phone models.Phones
 	if err := config.DB.First(&phone, c.Param("id")).Error; err != nil {

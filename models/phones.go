@@ -8,7 +8,8 @@ type Phones struct {
 	ModelID    int       `json:"model_id" gorm:"index;references:Models(id);onDelete:CASCADE"`
 	CapacityID int       `json:"capacity_id" gorm:"index;references:Capacities(id);onDelete:CASCADE"`
 	Price      int       `json:"price"`
+	MinPrice   int       `json:"min_price"`
 	CreatedAt  time.Time `json:"created_at"`
 	UpdatedAt  time.Time `json:"updated_at"`
-	IsDeleted  bool      `json:"is_deleted" gorm:"default:false"` // เปลี่ยนเป็น boolean
+	IsDeleted  bool      `json:"is_deleted" gorm:"default:false"`
 }
