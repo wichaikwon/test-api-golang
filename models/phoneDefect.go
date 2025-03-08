@@ -9,5 +9,5 @@ type PhoneDefect struct {
 	ChoiceID  int       `json:"choice_id" gorm:"index;references:DefectChoices(id);onDelete:CASCADE"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
-	IsDeleted bool      `json:"is_deleted" gorm:"default:false"` // เปลี่ยนเป็น boolean
+	IsDeleted bool      `json:"is_deleted" gorm:"default:false"`
 }
