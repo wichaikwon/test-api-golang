@@ -34,7 +34,6 @@ func SetupRouter() *gin.Engine {
 		dataRoutes.GET("", controllers.GetPhonesByCriteria)
 
 	}
-
 	brandRoutes := r.Group("/")
 	{
 		brandRoutes.GET("/brands", controllers.GetBrands)
@@ -99,6 +98,7 @@ func SetupRouter() *gin.Engine {
 		phoneRoutes.GET("/phones", controllers.GetPhones)
 		phoneRoutes.GET("/phones/:id", controllers.GetPhoneById)
 		phoneRoutes.GET("/phoneswithdefects/:id", controllers.GetPhoneDetailWithDefects)
+		phoneRoutes.GET("/finalprice", controllers.GetFinalPrice)
 		phoneRoutes.POST("/phones", controllers.CreatePhone)
 		phoneRoutes.PUT("/phones/:id", controllers.UpdatePhone)
 		phoneRoutes.DELETE("/phones/:id", controllers.DeletePhone)
